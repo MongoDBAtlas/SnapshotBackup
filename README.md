@@ -3,12 +3,14 @@
 
 # MongoDB Atlas Snapshot S3 backup
 
-### [&rarr; Atlas CLI](#Atlas CLI)
-### [&rarr; Grant Permission to Peering Connection](#Permission)
+### [&rarr; Atlas CLI](#AtlasCLI)
+### [&rarr; AWS Integration](#AWS)
+### [&rarr; Bucket Configuration](#Bucket)
+### [&rarr; Create export Job](#Job)
 
 <br>
 
-### Atlas CLI
+### AtlasCLI
 
 Atlas CLI를 다운로드 후 설치 하여 줍니다.
 https://www.mongodb.com/try/download/atlascli
@@ -112,7 +114,7 @@ To upgrade, see: https://dochub.mongodb.org/core/install-atlas-cli.
 To disable this alert, run "atlas config set skip_update_check true".
 ````
 
-### AWS Integration
+### AWS
 
 Project의 설정 화면에서 Integration에서 AWS를 선택 합니다.   
 
@@ -193,7 +195,7 @@ Validate and Finish 로 확인 하여 줍니다.
 <img src="/images/image03.png" width="90%" height="90%">     
 
 
-### Bucket 설정
+### Bucket
 
 생성한 Role 에 bucket 에 대한 업로드 권한이 있어야 합니다. 다음 Permission을 role에 줍니다.
 
@@ -220,7 +222,7 @@ Role에 생성한 Permission 입니다.
 <img src="/images/image04.png" width="90%" height="90%">     
 
 
-### Atlas CLI Job 설정
+### Job
 
 우선 Bucket을 등록 하여야 합니다. 등록을 위한 Command는 다음과 같습니다.  
 
