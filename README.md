@@ -3,10 +3,10 @@
 
 # MongoDB Atlas Snapshot S3 backup
 
-### [&rarr; Atlas CLI](#AtlasCLI)
-### [&rarr; AWS Integration](#AWS)
-### [&rarr; Bucket Configuration](#Bucket)
-### [&rarr; Create export Job](#Job)
+### [&rarr; Atlas CLI](#atlascli)
+### [&rarr; AWS Integration](#aws)
+### [&rarr; Bucket Configuration](#bucket)
+### [&rarr; Create export Job](#job)
 
 <br>
 
