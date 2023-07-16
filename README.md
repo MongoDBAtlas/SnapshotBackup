@@ -3,7 +3,7 @@
 
 # MongoDB Atlas Snapshot S3 backup
 
-### [&rarr; Azure Peering](#Peering)
+### [&rarr; Atlas CLI](#Atlas CLI)
 ### [&rarr; Grant Permission to Peering Connection](#Permission)
 
 <br>
