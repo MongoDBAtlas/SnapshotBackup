@@ -15,7 +15,10 @@
 Atlas CLI를 다운로드 후 설치 하여 줍니다.
 https://www.mongodb.com/try/download/atlascli
 
-Project 에서 API Key를 발급 받아야 하며 Organization ID, Project ID를 입력 하여 줍니다.
+
+Atlas와 연결을 위해서는 설정을 하여야 하며 API Key, Organization ID, Project ID가 필요 합니다.   
+
+발급 받은 API Key, Organization ID, Project ID를 입력 하여 줍니다.
 
 ````
 ~ % atlas config init        
@@ -27,7 +30,7 @@ Enter [?] on any option to get help.
 
 ? Public API Key: biyqu***
 ? Private API Key: [? for help] ************************************
-There was an error fetching your organizations: https://cloud.mongodb.com/api/atlas/v2/orgs GET: HTTP 403 (Error code: "ORG_REQUIRES_ACCESS_LIST") Detail: This organization requires access through an access list of ip ranges. Reason: Forbidden. Params: [175.196.74.118]
+There was an error fetching your organizations: https://cloud.mongodb.com/api/atlas/v2/orgs GET: HTTP 403 (Error code: "ORG_REQUIRES_ACCESS_LIST") Detail: This organization requires access through an access list of ip ranges. Reason: Forbidden. Params: [175.196.74.**]
 ? Do you want to enter the Organization ID manually? Yes
 ? Default Org ID: 61357268d1361******
 There was an error fetching your projects: This organization requires access through an access list of ip ranges.
@@ -373,3 +376,5 @@ Export 대상이 되는 snapshot의 id를 사용 합니다.
 작업이 완료되면 다음과 같이 S3에 데이터가 적재 되어 있는 것을 확인 할 수 있습니다. 
 
 <img src="/images/image07.png" width="90%" height="90%">   
+
+적재 되는 데이터 형태는 json.gz으로 생성 되며 완료가 되면 컬렉션 별로 .complete 파일이 생성 됩니다.
