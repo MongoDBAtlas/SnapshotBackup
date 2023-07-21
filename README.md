@@ -453,5 +453,7 @@ woowabro % ./massimport.sh . "mongodb+srv://admin:*****@serverless.9g***.mongodb
 2023-07-21T11:27:59.315+0900	100000 document(s) imported successfully. 0 document(s) failed to import.
 
 ````
+데이터를 확인 하여 보면 다음과 같이 생성 된 것을 확인 할 수 있습니다.   
 
+<img src="/images/image08.png" width="90%" height="90%">   
 
