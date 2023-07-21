@@ -7,6 +7,8 @@
 ### [&rarr; AWS Integration](#aws)
 ### [&rarr; Bucket Configuration](#bucket)
 ### [&rarr; Create export Job](#job)
+### [&rarr; Import Data from S3](#import)
+
 
 <br>
 
@@ -378,3 +380,78 @@ Export 대상이 되는 snapshot의 id를 사용 합니다.
 <img src="/images/image07.png" width="90%" height="90%">   
 
 적재 되는 데이터 형태는 json.gz으로 생성 되며 완료가 되면 컬렉션 별로 .complete 파일이 생성 됩니다.
+
+### Import
+
+데이터 Import 는 S3의 데이터를 다운로드 후에 import 하는 방법 입니다.    
+우선 데이터를 다운로드 하는 하는 것이 필요 합니다. 다운로드 후 zip 압축을 해제 합니다. 
+
+
+
+````
+woowabro % aws s3 cp s3://kdja**/exported_snapshots/61357268d1361978***/6271da22e663051***/woowabro/2023-07-20T0622/1689835315/  . --recursive
+download: s3://kdja**/exported_snapshots/61357268d1361978***/6271da22e663051***/woowabro/2023-07-20T0622/1689835315/.complete to ./.complete
+download: s3://kdja**/exported_snapshots/61357268d1361978***/6271da22e663051***/woowabro/2023-07-20T0622/1689835315/woowahan/datacol/metadata.json to woowahan/datacol/metadata.json
+download: s3://kdja**/exported_snapshots/61357268d1361978***/6271da22e663051***/woowabro/2023-07-20T0622/1689835315/woowahan/datacol/atlas-98ztan-shard-0.0.json.gz to woowahan/datacol/atlas-98ztan-shard-0.0.json.gz
+
+woowabro % gunzip -r *
+gunzip: woowahan/datacol/metadata.json: unknown suffix -- ignored
+
+````
+
+import를 위해 다음 명령어를 생성 하여 줍니다.
+
+```` massimport.sh
+
+#!/bin/bash
+regex='/(.+)/(.+)/.+'
+dir=${1%/}
+find $dir -type f -not -path '*/\.*' -not -path '*metadata\.json' | while read line ; do
+  [[ $line =~ $regex ]]
+  db_name=$database
+  col_name=${BASH_REMATCH[2]}
+  mongoimport --uri "$2" --mode=upsert -d $db_name -c $col_name --file $line --type json
+done
+
+````
+
+다운받은 파일 폴더에서 다음과 같이 실행 하여 줍니다.  
+
+```` 
+woowabro % export database=woowahan
+woowabro % ./massimport.sh . "mongodb+srv://admin:*****@serverless.9g***.mongodb.net/"
+2023-07-21T11:26:37.753+0900	error parsing command line options: expected argument for flag `-c, --collection', but got option `--file'
+2023-07-21T11:26:37.753+0900	try 'mongoimport --help' for more information
+2023-07-21T11:26:38.684+0900	connected to: mongodb+srv://[**REDACTED**]@serverless.9g***.mongodb.net/
+2023-07-21T11:26:41.684+0900	[........................] woowahan.datacol	264KB/24.6MB (1.0%)
+2023-07-21T11:26:44.685+0900	[........................] woowahan.datacol	515KB/24.6MB (2.0%)
+2023-07-21T11:26:47.684+0900	[........................] woowahan.datacol	765KB/24.6MB (3.0%)
+2023-07-21T11:26:50.685+0900	[........................] woowahan.datacol	765KB/24.6MB (3.0%)
+2023-07-21T11:26:53.684+0900	[........................] woowahan.datacol	1016KB/24.6MB (4.0%)
+2023-07-21T11:26:56.684+0900	[#.......................] woowahan.datacol	1.24MB/24.6MB (5.0%)
+2023-07-21T11:26:59.684+0900	[#.......................] woowahan.datacol	1.73MB/24.6MB (7.0%)
+2023-07-21T11:27:02.684+0900	[#.......................] woowahan.datacol	1.97MB/24.6MB (8.0%)
+2023-07-21T11:27:05.684+0900	[##......................] woowahan.datacol	2.22MB/24.6MB (9.0%)
+2023-07-21T11:27:08.684+0900	[##......................] woowahan.datacol	2.71MB/24.6MB (11.0%)
+2023-07-21T11:27:11.685+0900	[###.....................] woowahan.datacol	3.45MB/24.6MB (14.0%)
+2023-07-21T11:27:14.685+0900	[####....................] woowahan.datacol	4.19MB/24.6MB (17.0%)
+2023-07-21T11:27:17.684+0900	[####....................] woowahan.datacol	4.92MB/24.6MB (20.0%)
+2023-07-21T11:27:20.684+0900	[######..................] woowahan.datacol	6.15MB/24.6MB (25.0%)
+2023-07-21T11:27:23.684+0900	[#######.................] woowahan.datacol	7.38MB/24.6MB (30.0%)
+2023-07-21T11:27:26.684+0900	[########................] woowahan.datacol	8.86MB/24.6MB (36.0%)
+2023-07-21T11:27:29.685+0900	[##########..............] woowahan.datacol	10.3MB/24.6MB (42.0%)
+2023-07-21T11:27:32.684+0900	[###########.............] woowahan.datacol	11.8MB/24.6MB (48.0%)
+2023-07-21T11:27:35.684+0900	[############............] woowahan.datacol	13.0MB/24.6MB (53.0%)
+2023-07-21T11:27:38.684+0900	[##############..........] woowahan.datacol	14.7MB/24.6MB (59.7%)
+2023-07-21T11:27:41.684+0900	[###############.........] woowahan.datacol	16.2MB/24.6MB (66.0%)
+2023-07-21T11:27:44.683+0900	[#################.......] woowahan.datacol	17.6MB/24.6MB (71.4%)
+2023-07-21T11:27:47.684+0900	[##################......] woowahan.datacol	19.2MB/24.6MB (78.0%)
+2023-07-21T11:27:50.684+0900	[###################.....] woowahan.datacol	20.4MB/24.6MB (83.0%)
+2023-07-21T11:27:53.684+0900	[#####################...] woowahan.datacol	21.9MB/24.6MB (89.0%)
+2023-07-21T11:27:56.684+0900	[######################..] woowahan.datacol	23.4MB/24.6MB (95.1%)
+2023-07-21T11:27:59.315+0900	[########################] woowahan.datacol	24.6MB/24.6MB (100.0%)
+2023-07-21T11:27:59.315+0900	100000 document(s) imported successfully. 0 document(s) failed to import.
+
+````
+
+
